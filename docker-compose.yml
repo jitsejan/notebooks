@@ -4,6 +4,7 @@ services:
     build: .
     volumes:
       - ./notebooks:/opt/notebooks
+      - ./data:/opt/data
     ports:
       - "8888:8888"
 
