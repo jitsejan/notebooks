@@ -6,5 +6,5 @@ services:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data
     ports:
-      - "8888:8888"
+      - "8558:8558"
 
