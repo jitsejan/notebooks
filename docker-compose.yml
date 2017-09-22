@@ -1,7 +1,7 @@
 version: '2'
 services:
   anaconda:
-    build: .
+    image: jitsejan/anaconda3
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data

@@ -2,3 +2,4 @@ rpy2
 scrapy
 selenium
 mrjob
+pyspark
