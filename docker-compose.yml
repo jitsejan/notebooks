@@ -1,7 +1,7 @@
 version: '2'
 services:
   anaconda:
-    image: jitsejan/anaconda3
+    image: jitsejan/pyspark-notebook
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data

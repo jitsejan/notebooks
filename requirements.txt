@@ -3,3 +3,4 @@ scrapy
 selenium
 mrjob
 pyspark
+jupyter_contrib_nbextensions
