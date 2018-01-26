@@ -9,6 +9,10 @@ RUN apt-get update
 RUN apt-get install -y build-essential
 RUN apt-get install -y python-rpy2
 RUN conda install -c r r-essentials r-rjson
+# Update Node and NPM
+RUN conda install -c conda-forge nodejs
+RUN node --version
+RUN npm --version
 
 USER $NB_USER
 # Install Python requirements
