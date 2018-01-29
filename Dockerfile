@@ -6,7 +6,7 @@ RUN mkdir -p /etc/ssl/secrets
 COPY secrets/ /etc/ssl/secrets/
 # Add essential packages
 RUN apt-get update
-RUN apt-get install -y build-essential
+RUN apt-get install -y build-essential libtool pkg-config libzmq-dev autoconf automake git curl nano
 RUN apt-get install -y python-rpy2
 RUN conda install -c r r-essentials r-rjson
 # Update Node and NPM
@@ -16,10 +16,20 @@ RUN npm --version
 # Add password
 COPY jupyter/jupyter_notebook_config.json /home/jovyan/.jupyter/
 RUN chmod -R 777 /home/jovyan/
+
 USER $NB_USER
+# Install NodeJS kernel
+RUN git clone https://github.com/notablemind/jupyter-nodejs.git ~/jupyter-nodejs
+WORKDIR /home/jovyan/jupyter-nodejs
+RUN mkdir -p ~/.ipython/kernels/nodejs/
+RUN npm install
+RUN node install.js
+RUN npm run build
+RUN npm run build-ext
+RUN jupyter kernelspec install ~/.ipython/kernels/nodejs/ --user
 # Install Python requirements
-COPY requirements.txt /home/joyvan/
-RUN pip install -r /home/joyvan/requirements.txt
+COPY requirements.txt /home/jovyan/
+RUN pip install -r /home/jovyan/requirements.txt
 # Custom styling
 RUN mkdir -p /home/jovyan/.jupyter/custom
 COPY custom/custom.css /home/jovyan/.jupyter/custom/
