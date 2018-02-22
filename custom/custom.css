@@ -31,7 +31,7 @@ div.output_subarea {font-weight: normal; color: rgb(23, 24, 20);}
 
 .rendered_html table, .rendered_html th, .rendered_html tr, .rendered_html td {
   border: 1px  #f8f8f2 solid;
-  color: #f8f8f2;
+  color: #000;
 }
 div.output_html { font-family: sans-serif; }
 table.dataframe tr {border: 1px #f8f8f2;}

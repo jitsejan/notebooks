@@ -18,6 +18,11 @@ COPY jupyter/jupyter_notebook_config.json /home/jovyan/.jupyter/
 RUN chmod -R 777 /home/jovyan/
 
 USER $NB_USER
+# Install Scala kernel
+RUN git clone https://github.com/jupyter-scala/jupyter-scala.git
+WORKDIR /home/jovyan/jupyter-scala
+RUN ./jupyter-scala
+RUN jupyter kernelspec list
 # Install NodeJS kernel
 RUN git clone https://github.com/notablemind/jupyter-nodejs.git ~/jupyter-nodejs
 WORKDIR /home/jovyan/jupyter-nodejs
@@ -30,8 +35,10 @@ RUN jupyter kernelspec install ~/.ipython/kernels/nodejs/ --user
 # Install Python requirements
 COPY requirements.txt /home/jovyan/
 RUN pip install -r /home/jovyan/requirements.txt
+# Install NLTK
+RUN python -c "import nltk; nltk.download('popular')"
 # Custom styling
 RUN mkdir -p /home/jovyan/.jupyter/custom
 COPY custom/custom.css /home/jovyan/.jupyter/custom/
 # Run the notebook
-CMD ["/opt/conda/bin/jupyter", "notebook", "--notebook-dir=/opt/notebooks", "--ip='*'", "--no-browser", "--allow-root", "--port=8558", "--NotebookApp.keyfile=/etc/ssl/secrets/privkey.pem", "--NotebookApp.certfile=/etc/ssl/secrets/fullchain.pem"]
+CMD ["/opt/conda/bin/jupyter", "lab", "--notebook-dir=/opt/notebooks", "--ip='*'", "--no-browser", "--allow-root", "--port=8558", "--NotebookApp.keyfile=/etc/ssl/secrets/privkey.pem", "--NotebookApp.certfile=/etc/ssl/secrets/fullchain.pem"]

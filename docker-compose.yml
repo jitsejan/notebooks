@@ -2,6 +2,7 @@ version: '2'
 services:
   anaconda:
     image: jitsejan/pyspark-notebook
+    restart: always
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data
