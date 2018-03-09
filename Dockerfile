@@ -41,4 +41,4 @@ RUN python -c "import nltk; nltk.download('popular')"
 RUN mkdir -p /home/jovyan/.jupyter/custom
 COPY custom/custom.css /home/jovyan/.jupyter/custom/
 # Run the notebook
-CMD ["/opt/conda/bin/jupyter", "lab", "--notebook-dir=/opt/notebooks", "--ip='*'", "--no-browser", "--allow-root", "--port=8558", "--NotebookApp.keyfile=/etc/ssl/secrets/privkey.pem", "--NotebookApp.certfile=/etc/ssl/secrets/fullchain.pem"]
+CMD ["/opt/conda/bin/jupyter", "lab"]
