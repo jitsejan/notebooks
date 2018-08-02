@@ -6,39 +6,54 @@ RUN mkdir -p /etc/ssl/secrets
 COPY secrets/ /etc/ssl/secrets/
 # Add essential packages
 RUN apt-get update
-RUN apt-get install -y build-essential libtool pkg-config libzmq-dev autoconf automake git curl nano
+RUN apt-get install -y build-essential libtool pkg-config libzmq-dev autoconf automake git curl nano software-properties-common apt-transport-https
 RUN apt-get install -y python-rpy2
-RUN conda install -c r r-essentials r-rjson
+# Docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+RUN sudo add-apt-repository "deb https://download.docker.com/linux/ubuntu xenial stable"
+RUN apt-get update
+RUN apt-cache policy docker-ce
+RUN apt-get install docker-ce -y
+RUN gpasswd -a jovyan docker
+
+# Install the MS ODBC SQL driver
+# https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql unixodbc-dev
+# Set locale
+RUN apt-get update && apt-get install -y locales \
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+    && locale-gen
+
+
+#RUN usermod -a -G docker $NB_USER
+#RUN conda install -c r r-essentials r-rjson
 # Update Node and NPM
 RUN conda install -c conda-forge nodejs
 RUN node --version
 RUN npm --version
 # Add password
-COPY jupyter/jupyter_notebook_config.json /home/jovyan/.jupyter/
+COPY jupyter/jupyter_notebook_config.py /home/jovyan/.jupyter/
 RUN chmod -R 777 /home/jovyan/
 
 USER $NB_USER
 # Install Scala kernel
-RUN git clone https://github.com/jupyter-scala/jupyter-scala.git
-WORKDIR /home/jovyan/jupyter-scala
-RUN ./jupyter-scala
-RUN jupyter kernelspec list
-# Install NodeJS kernel
-RUN git clone https://github.com/notablemind/jupyter-nodejs.git ~/jupyter-nodejs
-WORKDIR /home/jovyan/jupyter-nodejs
-RUN mkdir -p ~/.ipython/kernels/nodejs/
-RUN npm install
-RUN node install.js
-RUN npm run build
-RUN npm run build-ext
-RUN jupyter kernelspec install ~/.ipython/kernels/nodejs/ --user
+#RUN git clone https://github.com/jupyter-scala/jupyter-scala.git
+#WORKDIR /home/jovyan/jupyter-scala
+#RUN ./jupyter-scala
+#RUN jupyter kernelspec list
 # Install Python requirements
 COPY requirements.txt /home/jovyan/
+RUN pip install --upgrade pip
 RUN pip install -r /home/jovyan/requirements.txt
 # Install NLTK
-RUN python -c "import nltk; nltk.download('popular')"
+#RUN python -c "import nltk; nltk.download('popular')"
 # Custom styling
 RUN mkdir -p /home/jovyan/.jupyter/custom
 COPY custom/custom.css /home/jovyan/.jupyter/custom/
+# NB extensions
+RUN jupyter contrib nbextension install --user
+RUN jupyter nbextensions_configurator enable --user
 # Run the notebook
 CMD ["/opt/conda/bin/jupyter", "lab"]

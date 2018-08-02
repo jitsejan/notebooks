@@ -1,11 +1,15 @@
 version: '2'
 services:
   anaconda:
+    user: root
+    privileged: true
     image: jitsejan/pyspark-notebook
     restart: always
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - GRANT_SUDO=yes
     ports:
       - "8558:8558"
-
