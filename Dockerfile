@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y locales \
     && locale-gen
 
 
-#RUN usermod -a -G docker $NB_USER
-#RUN conda install -c r r-essentials r-rjson
+RUN usermod -a -G docker $NB_USER
+RUN conda install -c r r-essentials r-rjson
 # Update Node and NPM
 RUN conda install -c conda-forge nodejs
 RUN node --version
@@ -48,7 +48,7 @@ COPY requirements.txt /home/jovyan/
 RUN pip install --upgrade pip
 RUN pip install -r /home/jovyan/requirements.txt
 # Install NLTK
-#RUN python -c "import nltk; nltk.download('popular')"
+RUN python -c "import nltk; nltk.download('popular')"
 # Custom styling
 RUN mkdir -p /home/jovyan/.jupyter/custom
 COPY custom/custom.css /home/jovyan/.jupyter/custom/
