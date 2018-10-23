@@ -15,9 +15,9 @@ RUN gpasswd -a jovyan docker
 
 # Install the MS ODBC SQL driver
 # https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
-RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
+#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+#RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+#RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql unixodbc-dev
 
 # Set locale
 RUN apt-get update && apt-get install -y locales \
@@ -43,7 +43,8 @@ USER $NB_USER
 # Install Python requirements
 COPY requirements.txt /home/jovyan/
 RUN pip install --upgrade pip
-RUN pip install -r /home/jovyan/requirements.txt
+RUN pip install pipenv
+RUN conda install --yes --file /home/jovyan/requirements.txt
 # Install NLTK
 RUN python -c "import nltk; nltk.download('popular')"
 # Custom styling
@@ -53,5 +54,4 @@ COPY custom/custom.css /home/jovyan/.jupyter/custom/
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
 # Run the notebook
-RUN  whoami
-CMD ["/opt/conda/bin/jupyter", "lab", "--allow-root"]
+CMD ["/opt/conda/bin/jupyter", "lab"]
