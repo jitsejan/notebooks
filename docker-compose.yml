@@ -1,6 +1,6 @@
-version: '2'
+version: '3'
 services:
-  anaconda:
+  jitsejan-pyspark:
     user: root
     privileged: true
     image: jitsejan/pyspark-notebook
@@ -8,7 +8,7 @@ services:
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data
-      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/.aws/credentials:/home/jovyan/.aws/credentials:ro
     environment:
       - GRANT_SUDO=yes
     ports:
