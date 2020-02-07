@@ -8,7 +8,7 @@ services:
     volumes:
       - ./notebooks:/opt/notebooks
       - ./data:/opt/data
-      - $HOME/.aws/credentials:/home/jovyan/.aws/credentials:ro
+      - $HOME/.aws/:/home/jovyan/.aws:ro
     environment:
       - GRANT_SUDO=yes
     ports:
