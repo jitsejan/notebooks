@@ -2,7 +2,9 @@ boto3
 scrapy
 selenium
 mrjob
+psycopg2
 pyspark
+pyarrow
 nltk
 jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
