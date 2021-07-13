@@ -17,8 +17,11 @@ USER $NB_USER
 # Update Conda
 RUN conda update --all
 # Install Python requirements
-COPY requirements.txt /home/jovyan/
-RUN pip install -r /home/jovyan/requirements.txt
+COPY pyproject.toml /home/jovyan/
+WORKDIR /home/jovyan
+RUN pip3 install poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-dev
 # Install NLTK
 RUN python -c "import nltk; nltk.download('popular')"
 # Custom styling
@@ -28,4 +31,4 @@ COPY custom/custom.css /home/jovyan/.jupyter/custom/
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
 # Run the notebook
-CMD ["/opt/conda/bin/jupyter", "lab", "--allow-root"]
+CMD ["/opt/conda/bin/jupyter", "notebook", "--allow-root"]
